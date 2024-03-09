@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import com.example.aviatickets.R
 import com.example.aviatickets.adapter.OfferListAdapter
 import com.example.aviatickets.databinding.FragmentOfferListBinding
+import com.example.aviatickets.model.entity.Flight
+import com.example.aviatickets.model.entity.Offer
 import com.example.aviatickets.model.service.FakeService
 
 
@@ -50,12 +52,16 @@ class OfferListFragment : Fragment() {
                         /**
                          * implement sorting by price
                          */
+                        val offerList: List<Offer> = ListOf()
+                        val offerSortedList: List<Offer> = offerList.sortedBy { it.price }
                     }
 
                     R.id.sort_by_duration -> {
                         /**
                          * implement sorting by duration
                          */
+                        val offerList: List<Offer> = ListOf()
+                        val offerSortedList: List<Offer> = offerList.sortedBy { it.price }
                     }
                 }
             }

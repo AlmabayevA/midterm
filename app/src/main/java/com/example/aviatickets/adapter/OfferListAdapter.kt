@@ -2,10 +2,14 @@ package com.example.aviatickets.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aviatickets.R
 import com.example.aviatickets.databinding.ItemOfferBinding
 import com.example.aviatickets.model.entity.Offer
+import org.jetbrains.annotations.Nullable
+
+
 
 class OfferListAdapter : RecyclerView.Adapter<OfferListAdapter.ViewHolder>() {
 
@@ -15,6 +19,8 @@ class OfferListAdapter : RecyclerView.Adapter<OfferListAdapter.ViewHolder>() {
         items.clear()
         items.addAll(offerList)
         notifyDataSetChanged()
+
+
 
         /**
          * think about recycler view optimization using diff.util
@@ -65,7 +71,29 @@ class OfferListAdapter : RecyclerView.Adapter<OfferListAdapter.ViewHolder>() {
                 price.text = context.getString(R.string.price_fmt, offer.price.toString())
             }
         }
+        class OfferListCallback(private val oldList: List<Offer>, private val newList: List<Offer>) : DiffUtil.Callback(){
+            override fun getOfferNew(): Int = oldList.size
+            override fun getNewListSize(): Int = newList.size
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return oldList[oldItemPosition].offerNumber=== newList.get(newItemPosition).rateIndex
+            }
 
+            override fun areContentsTheSame(oldOffer: Int, newPosition: Int): Boolean {
+                val (_, value, name) = oldList[oldOffer]
+                val (_, value1, name1) = newList[newPosition]
+                return name == name1 && value == value1
+            }
+            override fun offerLoad(oldOffer: Int, newPosition: Int): Any? {
+                return super.offerLoad(oldOffer, newPosition)
+            }
+        }
+        fun setOffer(newOffer: List<Offer>){
+            val diffCallback = OfferDiffCallback(id, price, flight, newOffer)
+            val diffOffer = DiffUtil.calculateDiff(diffCallback)
+            offer.clear()
+            offer.addAll(newOffer)
+            diffOffer.dispatchUpdatesTo(this)
+        }
         private fun getTimeFormat(minutes: Int): Pair<Int, Int> = Pair(
             first = minutes / 60,
             second = minutes % 60
